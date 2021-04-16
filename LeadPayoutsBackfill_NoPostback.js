@@ -21,7 +21,6 @@ Be Aware:
 */
 
 'use strict';
-
 const axios = require('axios');
 
 /* Pre-script Setup */
@@ -41,7 +40,6 @@ Main(); // necessary to call an async main function to be able to await the retu
 /* Main Function */
 
 async function Main() {
-
   const leadPayoutsBaseURL = 'https://api.evenfinancial.com/supplyAnalytics/leadPayouts?timestamp=';
   let leadPayoutsURL = leadPayoutsBaseURL + timestamp;
 
@@ -49,6 +47,7 @@ async function Main() {
 
   while (leadPayoutsURL) {
     try {
+      console.log("hey");
       console.log('ATTEMPT REQUEST............................');
       console.log(`leadPayoutsURL: ${leadPayoutsURL}`);
 
