@@ -1,5 +1,6 @@
 /* 
 Lead Payouts Backfill with NO Postback script
+
 What it does: 
 - Hits Even's leadPayouts endpoint using the timestamp supplied as a command line argument as a starting point
 - Filters response for needed parameters and formats them
@@ -8,9 +9,11 @@ What it does:
 - Output is only logged to the console
 - Exits with success code 0 once the API responds with status code: 422 and type: malformed. This means end of available data has been reached
 - Exits with error code 1 in all other cases
+
 Usage: 
 $ node {script name} {timestamp to start at}
 e.g. $ node LeadPayoutsBackfill_NoPostback.js 2021-01-21T20:00:00Z
+
 Be Aware:
 - ladPayoutsURL is passed as an arg through each async function in the chain so the loop can replace it with nextUrl for subsequent requests
 - script does not check if timestamp's format is correct. Any error due to this will come from API error response with status code: 422 and type: missing
@@ -126,8 +129,11 @@ async function Main() {
 
 /*
 getLeadPayouts
+
 Hits Even's leadPayouts endpoint with async GET request
+
 Returns: response from leadPayouts endpoint as a JSON payload
+
 TO DO: abstract bearerToken so not hard coded
 */
 
@@ -151,14 +157,18 @@ async function getLeadPayouts(leadPayoutsURL) {
     axiosRequestOptions
   );
 
+  
   return leadPayoutsPayload;
 }
 
 /*
 filterLeadPayouts
+
 Parses JSON payload, finds the 3 Even params that Kao needs, pushes each trio of them to an array
+
 Returns: an array containing the needed params, or an empty array if no lead payouts were found by the request
-TO DO: handle what to do with invalid subid (i.e. '[[SUBID]]') => Currently ignored but logged to console
+
+TO DO: handle what to do with invalid subid (i.e. '[[SUBID]]')
 */
 
 async function filterLeadPayouts(leadPayoutsURL) {
@@ -176,12 +186,11 @@ async function filterLeadPayouts(leadPayoutsURL) {
       (obj) => obj.key === "client_id"
     ).value;
 
-    if (isNaN(parseInt(clientID))) {
-      // sorts out Invalid Client IDs
-      // Events with invalid Client IDs are stored in a list
-      skippedLeadEvents.push({
-        leadEvent,
-      });
+    if(isNaN(parseInt(clientID))){ // sorts out Invalid Client IDs
+      // Events with invalid Client IDs are stored in a list 
+        skippedLeadEvents.push({
+          leadEvent,
+        });
     } else {
       kaoParamsBundle.push([payout, uuID, clientID]);
     }
@@ -198,13 +207,17 @@ async function filterLeadPayouts(leadPayoutsURL) {
   return fullParamsBundle;
 }
 
+
 /*
 createKaoURLs
+
 Formats each trio of params and uses them to create the URLs meeting Kao's postback requirements
+
 Returns: object with keys: nextUrl and kaoURLsArray, or an empty array if no lead payouts were found by the request
 */
 
 async function createKaoURLs(leadPayoutsURL) {
+  console.log('Sending data to be filtered')
   const fullParamsBundle = await filterLeadPayouts(leadPayoutsURL);
 
   let kaoParamsBundle = fullParamsBundle.kaoParamsBundle;

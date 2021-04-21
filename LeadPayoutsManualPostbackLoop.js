@@ -10,7 +10,7 @@ const axios = require('axios');
 // 'https://swapi.dev/api/people/3'
 
 const urlList = [
-  "https://www.kaotrk.com/tracking202/static/gpb.php?amount=0.848&subid=1503353-7871&t202txid=3dfb5792-a005-4d92-9a21-a44d7c42e4e6",
+  "https://www.kaotrk.com/tracking202/static/gpb.php?amount=34.56&subid=1487171-7871&t202txid=c933aac6-c256-414a-ba4a-a184b215c307",
 ];
 
 Main();
